@@ -33,7 +33,7 @@ app.use((err, req, res, next) => {
   }
 })
 
-app.listen(8000, (err) => {
+app.listen(process.env.PORT || 8000, (err) => {
   if (err) {
     console.log('Error:', err)
   }
