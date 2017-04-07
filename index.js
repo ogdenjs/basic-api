@@ -5,16 +5,6 @@ const app = express()
 
 app.use(bodyParser.json())
 
-app.use((req, res, next) => {
-  const matched = req.url.match(/(.*)\.html$/)
-
-  if (!matched) {
-    req.url += '.html'
-  }
-
-  next()
-})
-
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
