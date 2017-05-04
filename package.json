@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "body-parser": "1.17.1",
     "express": "^4.15.2",
     "nodemon": "1.11.0"
