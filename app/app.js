@@ -1,15 +1,31 @@
+const path = require('path')
+require('app-module-path').addPath(path.resolve(__dirname))//make requires relative to app dir
+
 const express = require('express')
 const bodyParser = require('body-parser')
+const expressValidator = require('express-validator')
+const db = require('./db/connect')
+const validatorOptions = require('./utils/validation/express-validator-options')
+const authMiddleware = require('./utils/auth/authMiddleware')
 
-var path = require('path')
-require('app-module-path').addPath(path.resolve(__dirname))//make requires relative to app dir
+/*
+Import module routes
+ */
+const jedi = require('./jedi/routes')
 
 const app = express()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(expressValidator([validatorOptions]))
+
+
+//connect to the db
+app.use(db)
 
 app.use('/public', express.static('public'))
+
+app.use(authMiddleware)
 
 app.post('/sum', (req, res, next) => {
   const sum = req.body.num1 + req.body.num2
@@ -24,6 +40,14 @@ app.post('/sum', (req, res, next) => {
   res.json({ sum: sum })
 })
 
+/*
+Route Middleware
+ */
+app.use('/jedi', jedi)
+
+/*
+Other Routes
+ */
 app.get('/', (req, res) => {
   res.json('Where do you want to go?')
 })
@@ -45,7 +69,17 @@ app.use(function(req, res, next) {
   next(err)
 })
 
+//handle errors
 app.use((err, req, res, next) => {
+  if(err.type === 'validation'){
+    return res.status(422).json(err.error)
+  }
+  else{
+    next(err)
+  }
+})
+app.use((err, req, res, next) => {
+  console.log(err)
   if (err.status >= 500) {
     console.error(err)
     res.status(500).json({ message: err.message || 'Error!' })

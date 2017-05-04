@@ -11,9 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ajv": "^5.0.1",
     "app-module-path": "^2.2.0",
     "body-parser": "1.17.1",
     "express": "^4.15.2",
+    "express-validator": "^3.2.0",
+    "fast-json-patch": "^1.1.9",
+    "nedb": "^1.8.0",
     "nodemon": "1.11.0"
   }
 }
